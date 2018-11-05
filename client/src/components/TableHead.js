@@ -8,8 +8,12 @@ import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
 
 const rows = [
-  { id: 'title', disablePadding: true, label: 'Title' },
-  { id: 'completed', disablePadding: false, label: 'Completed' },
+  { id: 'login', disablePadding: true, label: 'Name' },
+  { id: 'githubId', disablePadding: false, label: 'Github Id' },
+  { id: 'url', disablePadding: false, label: 'URL' },
+  { id: 'score', disablePadding: false, label: 'Score' },
+  { id: 'phone', disablePadding: false, label: 'Phone' },
+  { id: 'email', disablePadding: false, label: 'Email' }
 ];
 
 class EnhancedTableHead extends React.Component {

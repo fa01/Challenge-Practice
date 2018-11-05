@@ -27,7 +27,7 @@ class EnhancedTable extends React.Component {
 
     this.state = {
       order: 'asc',
-      orderBy: 'title',
+      orderBy: 'login',
       selected: [],
       data: this.props.data,
       page: 0,
@@ -60,10 +60,10 @@ class EnhancedTable extends React.Component {
   sortData(options){
     const { orderBy, order } = options;
 
-    if(orderBy === 'title'){
+    if(orderBy === 'login'){
       return order === 'desc'
-        ? (a, b) => ( b.title < a.title ? -1 : 1)
-        : (a, b) => ( a.title < b.title ? -1 : 1)
+        ? (a, b) => ( b.login.toLowerCase() < a.login.toLowerCase() ? -1 : 1)
+        : (a, b) => ( a.login.toLowerCase() < b.login.toLowerCase() ? -1 : 1)
     }
   }
 
@@ -75,10 +75,12 @@ class EnhancedTable extends React.Component {
     this.setState({ selected: [] });
   };
 
-  handleClick = (event, id) => {
+  handleClick = (event, id, githubId) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
+
+    console.log('before', selected, selectedIndex);
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -93,7 +95,11 @@ class EnhancedTable extends React.Component {
       );
     }
 
+    console.log('after', selected, selectedIndex);
+
     this.setState({ selected: newSelected });
+
+    this.props.handleClick(githubId);
   };
 
   handleChangePage = (event, page) => {
@@ -107,6 +113,7 @@ class EnhancedTable extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
+    console.log('selectedindex', this.state.selected)
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
@@ -132,7 +139,7 @@ class EnhancedTable extends React.Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleClick(event, item._id)}
+                      onClick={event => this.handleClick(event, item._id, item.githubId)}
                       role="checkbox"
                       aria-checked={isSelected}
                       tabIndex={-1}
@@ -143,10 +150,16 @@ class EnhancedTable extends React.Component {
                         <Checkbox checked={isSelected} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        {item.title}
+                        {item.login}
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        {item.completed}
+                        {item.githubId}
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {item.url}
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {item.score}
                       </TableCell>
                     </TableRow>
                   );

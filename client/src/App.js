@@ -15,19 +15,39 @@ class App extends Component {
     super(props);
 
     this.state = {
-      data: null
+      users: null
     }
 
+    this.getUsers = this.getUsers.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount(){
     //Call our fetch function below once the component mounts
     try{
       console.log('componentDidMount - getting Data');
+      const users = await this.getUsers();
+      this.setState({ users });
     }
     catch(e){
       throw Error(e);
     }
+  }
+
+  async getUsers(){
+    console.log('getUsers')
+    const response = await fetch('/api/users'); 
+    const body = await response.json();
+    console.log('users response', body)
+    if (response.status !== 200) {
+      throw Error(body.message)
+    }
+
+    return body;
+  }
+
+  handleClick(githubId){
+    console.log('handleClick passed id back up', githubId);
   }
 
   render() {
@@ -35,10 +55,10 @@ class App extends Component {
 
     return (
       <div className="App">
-      {this.state.data &&
-        <EnhancedTable data = {this.state.data} />
+      {this.state.users &&
+        <EnhancedTable data = {this.state.users} handleClick = {this.handleClick}/>
       }
-      { !this.state.data && <CircularProgress className={classes.progress} />}
+      { !this.state.users && <CircularProgress className={classes.progress} />}
       </div>
     );
   }
